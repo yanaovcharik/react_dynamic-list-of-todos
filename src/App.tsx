@@ -15,10 +15,9 @@ export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [showError, setShowError] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [query, setQuery] = useState('');
-  const [chousedFilter, setChousedFilter] = useState('all');
+  const [chosenFilter, setChosenFilter] = useState('all');
 
   useEffect(() => {
     const loadTodos = async () => {
@@ -36,26 +35,22 @@ export const App: React.FC = () => {
     loadTodos();
   }, []);
 
-  const handleOpenMod = (todo: Todo) => {
-    if (todo) {
-      setSelectedTodo(todo);
-      setIsModalOpen(true);
-    }
+  const handleSelectTodo = (todo: Todo) => {
+    setSelectedTodo(todo);
   };
 
-  const handleCloseMod = () => {
-    setIsModalOpen(false);
+  const handleDeselectTodo = () => {
     setSelectedTodo(null);
   };
 
-  const enableTitle = () => {
+  const onTitleEnable = () => {
     setQuery('');
   };
 
   const getVisibleTodos = (
     todosList: Todo[],
     queryFilter: string,
-    chousedFilt: string,
+    chosenFilt: string,
   ): Todo[] => {
     let visibleTodos = [...todosList];
 
@@ -65,11 +60,11 @@ export const App: React.FC = () => {
       );
     }
 
-    if (chousedFilt === 'completed') {
+    if (chosenFilt === 'completed') {
       visibleTodos = visibleTodos.filter(todo => todo.completed === true);
     }
 
-    if (chousedFilt === 'active') {
+    if (chosenFilt === 'active') {
       visibleTodos = visibleTodos.filter(todo => todo.completed === false);
     }
 
@@ -77,8 +72,10 @@ export const App: React.FC = () => {
   };
 
   const visibleTodos = useMemo(() => {
-    return getVisibleTodos(todos, query, chousedFilter);
-  }, [todos, query, chousedFilter]);
+    return getVisibleTodos(todos, query, chosenFilter);
+  }, [todos, query, chosenFilter]);
+
+  const isModalOpen = !!selectedTodo;
 
   return (
     <>
@@ -89,11 +86,11 @@ export const App: React.FC = () => {
 
             <div className="block">
               <TodoFilter
-                enableTitle={enableTitle}
+                onTitleEnable={onTitleEnable}
                 setQuery={setQuery}
                 query={query}
-                chousedFilter={chousedFilter}
-                setChousedFilter={setChousedFilter}
+                chosenFilter={chosenFilter}
+                setChosenFilter={setChosenFilter}
               />
             </div>
 
@@ -103,7 +100,7 @@ export const App: React.FC = () => {
               ) : (
                 <TodoList
                   todos={visibleTodos}
-                  openMod={handleOpenMod}
+                  onTodoSelected={handleSelectTodo}
                   selectedTodo={selectedTodo}
                 />
               )}
@@ -114,7 +111,7 @@ export const App: React.FC = () => {
       </div>
 
       {isModalOpen && (
-        <TodoModal closeMod={handleCloseMod} todo={selectedTodo} />
+        <TodoModal closeMod={handleDeselectTodo} todo={selectedTodo} />
       )}
     </>
   );

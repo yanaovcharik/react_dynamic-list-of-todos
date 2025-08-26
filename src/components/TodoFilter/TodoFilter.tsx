@@ -1,19 +1,19 @@
 import { Dispatch, SetStateAction } from 'react';
 
 interface Props {
-  enableTitle: () => void;
+  onTitleEnable: () => void;
   setQuery: Dispatch<SetStateAction<string>>;
   query: string;
-  chousedFilter: string;
-  setChousedFilter: Dispatch<SetStateAction<string>>;
+  chosenFilter: string;
+  setChosenFilter: Dispatch<SetStateAction<string>>;
 }
 
 export const TodoFilter: React.FC<Props> = ({
-  enableTitle,
+  onTitleEnable: onTitleEnable,
   setQuery,
   query,
-  chousedFilter,
-  setChousedFilter,
+  chosenFilter: chosenFilter,
+  setChosenFilter: setChosenFilter,
 }) => {
   return (
     <form className="field has-addons">
@@ -21,8 +21,8 @@ export const TodoFilter: React.FC<Props> = ({
         <span className="select">
           <select
             data-cy="statusSelect"
-            value={chousedFilter}
-            onChange={e => setChousedFilter(e.target.value)}
+            value={chosenFilter}
+            onChange={e => setChosenFilter(e.target.value)}
           >
             <option value="all">All</option>
             <option value="active">Active</option>
@@ -51,7 +51,7 @@ export const TodoFilter: React.FC<Props> = ({
               data-cy="clearSearchButton"
               type="button"
               className="delete"
-              onClick={() => enableTitle()}
+              onClick={() => onTitleEnable()}
             />
           )}
         </span>

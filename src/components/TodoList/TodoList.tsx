@@ -4,11 +4,15 @@ import { Todo } from '../../types/Todo';
 
 interface Props {
   todos: Todo[];
-  openMod: (todo: Todo) => void;
+  onTodoSelected: (todo: Todo) => void;
   selectedTodo: Todo | null;
 }
 
-export const TodoList: React.FC<Props> = ({ todos, openMod, selectedTodo }) => {
+export const TodoList: React.FC<Props> = ({
+  todos,
+  onTodoSelected,
+  selectedTodo,
+}) => {
   if (!todos.length) {
     return <p data-cy="no-todos-message">No todos found</p>;
   }
@@ -54,7 +58,7 @@ export const TodoList: React.FC<Props> = ({ todos, openMod, selectedTodo }) => {
                 data-cy="selectButton"
                 className="button"
                 type="button"
-                onClick={() => openMod(todo)}
+                onClick={() => onTodoSelected(todo)}
               >
                 <span className="icon">
                   <i
